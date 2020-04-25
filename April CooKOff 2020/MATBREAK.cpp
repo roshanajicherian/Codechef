@@ -1,18 +1,18 @@
 #include <bits/stdc++.h>
-#define MOD 1000000007
-typedef long long lli;
 using namespace std;
+typedef long long lli;
+#define MOD 1000000007
 lli fastPower(lli base, lli exponent)
 {
+    lli result = 1;
     base = base % MOD;
     if (base == 0)
-        return 0;
-    lli result = 1;
-    while (exponent > 0)
+        return base;
+    while (exponent)
     {
-        if (exponent & 1) //if exponent is odd
+        if (exponent & 1)
             result = (result * base) % MOD;
-        exponent = exponent >> 1;
+        exponent >>= 1;
         base = (base * base) % MOD;
     }
     return result;
@@ -21,21 +21,16 @@ void solve()
 {
     lli n = 0, a = 0;
     cin >> n >> a;
-    lli elementInMatrix = a, sumOfMultipliers = 0;
-    bool matrix[n][n];
-    memset(matrix, true, sizeof(matrix));
-    //FRIST STEP
-    for (lli i = 1; i <= n; i++) //check here if always n steps are required
+    lli valueOfMatrixElement = 1;
+    lli result = 0, p = 0, num = 1;
+    for (lli i = 1; i <= n; i++)
     {
-        for (lli k = 1; k <= i - 1; k++)
-            matrix[k][n - i + 1] = false;
-        for (lli k = 1; n - i + k <= n; k++)
-            matrix[i][n - i + k] = false;
-        lli multiplier = fastPower(elementInMatrix, 2 * i - 1);
-        sumOfMultipliers = (sumOfMultipliers % MOD + multiplier) % MOD;
-        elementInMatrix *= multiplier;
+        p = fastPower((a * valueOfMatrixElement) % MOD, num);
+        num += 2;
+        result = (result + p) % MOD;
+        valueOfMatrixElement = (valueOfMatrixElement * p) % MOD;
     }
-    cout << sumOfMultipliers << '\n';
+    cout << result << '\n';
 }
 int main()
 {
