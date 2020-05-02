@@ -8,31 +8,39 @@ void solve()
     string S;
     cin >> n >> q;
     cin >> S;
-    lli letterCount[CHARMAX], temporaryLetterCount[CHARMAX];
+    lli letterCount[CHARMAX];
     memset(letterCount, 0, sizeof(letterCount));
     for (lli i = 0; i < S.length(); i++)
-    {
         letterCount[S[i] - 'a']++;
-    }
-    while (q--)
+    lli queries[q];
+    lli maxc = INT_MIN;
+    for (lli i = 0; i < q; i++)
     {
-        cin >> c;
-        lli pendingQueue = S.length();
+        cin >> queries[i];
+        maxc = max(maxc, queries[i]);
+    }
+    lli pendingQueue = n;
+    lli queryresult[maxc + 1];
+    memset(queryresult, 0, sizeof(queryresult));
+    lli j = 1;
+    while (maxc > 0)
+    {
         for (lli i = 0; i < CHARMAX; i++)
-            temporaryLetterCount[i] = letterCount[i];
-        while (c > 0)
         {
-            for (lli i = 0; i < CHARMAX; i++)
+            if (letterCount[i] > 0)
             {
-                if (temporaryLetterCount[i] > 0)
-                {
-                    temporaryLetterCount[i]--;
-                    pendingQueue--;
-                }
+                letterCount[i]--;
+
+                pendingQueue--;
             }
-            c--;
         }
-        cout << pendingQueue << '\n';
+        queryresult[j] = pendingQueue;
+        maxc--;
+        j++;
+    }
+    for (lli i = 0; i < q; i++)
+    {
+        cout << queryresult[queries[i]] << '\n';
     }
 }
 int main()
