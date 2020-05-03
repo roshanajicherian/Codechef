@@ -12,35 +12,34 @@ void solve()
     memset(letterCount, 0, sizeof(letterCount));
     for (lli i = 0; i < S.length(); i++)
         letterCount[S[i] - 'a']++;
-    lli queries[q];
-    lli maxc = INT_MIN;
-    for (lli i = 0; i < q; i++)
-    {
-        cin >> queries[i];
-        maxc = max(maxc, queries[i]);
-    }
-    lli pendingQueue = n;
-    lli queryresult[maxc + 1];
-    memset(queryresult, 0, sizeof(queryresult));
-    lli j = 1;
-    while (maxc > 0)
-    {
-        for (lli i = 0; i < CHARMAX; i++)
+    vector<lli> letterCountGreaterThan1;
+    lli maxi = LLONG_MIN;
+    for (lli i = 0; i < CHARMAX; i++)
+        if (letterCount[i] > 1)
         {
-            if (letterCount[i] > 0)
-            {
-                letterCount[i]--;
-
-                pendingQueue--;
-            }
+            if (letterCount[i] > maxi)
+                maxi = letterCount[i];
+            letterCountGreaterThan1.push_back(letterCount[i]);
         }
-        queryresult[j] = pendingQueue;
-        maxc--;
-        j++;
-    }
-    for (lli i = 0; i < q; i++)
+    lli pendingQueue = 0;
+    while (q--)
     {
-        cout << queryresult[queries[i]] << '\n';
+        pendingQueue = 0;
+        lli c = 0;
+        cin >> c;
+        if (c == 0)
+            cout << n << '\n';
+        else if (c >= maxi)
+            cout << 0 << '\n';
+        else
+        {
+            for (lli i : letterCountGreaterThan1)
+            {
+                if (i - c > 0)
+                    pendingQueue += (i - c);
+            }
+            cout << pendingQueue << '\n';
+        }
     }
 }
 int main()
