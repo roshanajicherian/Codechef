@@ -1,72 +1,65 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define MAXN 160001
+#define MAXN 400
 typedef long long int lli;
+lli kValues[MAXN + 1];
+void init()
+{
+    kValues[3] = 1;
+    for (lli i = 4; i <= 400; i++)
+    {
+        if (i & 1)
+            kValues[i] = kValues[i - 1];
+        else
+            kValues[i] = i / 2;
+    }
+}
 void solve()
 {
     lli n = 0, k = 0;
     cin >> n >> k;
-    lli V[k + 1][3];
+    vector<int> result[k];
     lli A[n + 1];
     for (lli i = 1; i <= n; i++)
         cin >> A[i];
-    lli start = 1, end = n, count = 0;
+    //lli movesRequired = kValues[n];
+    lli start = 1, end = n, v1 = end - 1;
+    int count = 0;
+    //cout << movesRequired << '\n';
     while (start < end)
     {
-        lli maxi = INT_MIN, mini = INT_MAX;
-        lli maxiIndex = 0, miniIndex = 0;
-        for (lli i = start; i <= end; i++)
+        if (end != start + 1)
         {
-            if (A[i] > maxi)
-            {
-                maxi = A[i];
-                maxiIndex = i;
-            }
-            if (A[i] < mini)
-            {
-                mini = A[i];
-                miniIndex = i;
-            }
-        }
-        if (end == start + 1)
-        {
-            count++;
-            V[count - 1][0] = end;
-            V[count - 1][1] = start;
-            V[count - 1][2] = start - 1;
-            break;
+            //cout << v1 << ' ' << start << ' ' << end << '\n';
+            result[count].push_back(v1);
+            result[count].push_back(start);
+            result[count].push_back(end);
         }
         else
         {
-            lli v1 = 0, v2 = 0, v3 = 0, tv1 = 0, tv2 = 0, tv3 = 0;
-            v3 = miniIndex, v2 = maxiIndex, v1 = miniIndex - 1;
-            count++;
-            V[count - 1][0] = v1;
-            V[count - 1][1] = v2;
-            V[count - 1][2] = v3;
-            tv2 = A[v2];
-            A[v2] = A[v1];
-            tv3 = A[v3];
-            A[v3] = tv2;
-            tv1 = A[tv1];
-            A[v1] = tv3;
+            //cout << start << ' ' << end + 1 << ' ' << end << '\n';
+            result[count].push_back(start);
+            result[count].push_back(end + 1);
+            result[count].push_back(end);
         }
         start++;
+        v1--;
         end--;
+        count++;
     }
     cout << count << '\n';
-    for (lli i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
-        for (lli j = 0; j < 3; j++)
-            cout << V[i][j] << ' ';
+        for (auto j : result[i])
+        {
+            cout << j << ' ';
+        }
         cout << '\n';
     }
 }
 int main()
 {
-#ifndef ONLINE_JUDGE
-    freopen("in.txt", "r", stdin);
-#endif
+    //init();
     lli t = 0;
     cin >> t;
     while (t--)
